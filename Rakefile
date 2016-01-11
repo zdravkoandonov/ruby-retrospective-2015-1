@@ -9,9 +9,9 @@ task :check do
   end
 end
 
-desc 'Starts watchr'
+desc 'Starts a proecss to run tests on a task when its solution is modified'
 task :watch do
-  system 'bundle exec watchr watchr.rb'
+  system 'bundle exec observr observr.rb'
 end
 
 namespace :tasks do

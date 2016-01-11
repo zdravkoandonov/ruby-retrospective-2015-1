@@ -5,6 +5,7 @@ GEM
     ffi (1.9.10)
     ffi-aspell (1.1.0)
       ffi
+    observr (1.0.5)
     rake (10.4.2)
     rspec (3.4.0)
       rspec-core (~> 3.4.0)
@@ -23,16 +24,15 @@ GEM
       ffi-aspell
       trollop (>= 1.16.2)
     trollop (2.1.2)
-    watchr (0.7)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  observr
   rake
   rspec
   skeptic (~> 0.0.16)
-  watchr
 
 BUNDLED WITH
    1.10.6
