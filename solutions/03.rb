@@ -12,25 +12,20 @@ class RationalSequence
     @count = count
   end
 
-  def each
-    row, position = 1, 1
-    yielded_numbers_count = 0
-    going_upward = false
-    while yielded_numbers_count < @count
-      numerator, denominator = position, row + 1 - position
-      numerator, denominator = denominator, numerator if going_upward
-      irreducible = Rational(numerator, denominator)
-      if irreducible.numerator == numerator
-        yield irreducible
-        yielded_numbers_count += 1
-      end
-      position += 1
-      if position > row
-        position = 1
-        row += 1
-        going_upward = !going_upward
+  def each(&block)
+    pairs_by_row = 1.upto(Float::INFINITY).lazy.map do |row|
+      if row % 2 == 0
+        (1..row).to_a.reverse.zip((1..row).to_a)
+      else
+        (1..row).to_a.zip((1..row).to_a.reverse)
       end
     end
+    pairs_by_row.
+      flat_map { |pair| pair }.
+      select { |numerator, denominator| numerator.gcd(denominator) == 1 }.
+      map { |numerator, denominator| Rational(numerator, denominator) }.
+      take(@count).
+      each(&block)
   end
 end
 
@@ -94,12 +89,12 @@ module DrunkenMathematician
   end
 
   def worthless(n)
-    rational_numbers = RationalSequence.new(Float::INFINITY)
     limit = FibonacciSequence.new(n).to_a.fetch(-1, 0)
-    taken_numbers = []
-    rational_numbers.take_while do |number|
-      taken_numbers << number
-      taken_numbers.reduce(0, :+) <= limit
+
+    sum = 0
+    RationalSequence.new(limit**2).take_while do |number|
+      sum += number
+      sum <= limit
     end
   end
 end
