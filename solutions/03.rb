@@ -79,12 +79,10 @@ module DrunkenMathematician
   end
 
   def aimless(n)
-    first_n_prime_numbers = PrimeSequence.new(n)
-    rational_numbers = []
-    first_n_prime_numbers.each_slice(2) do |slice|
-      rational_numbers << Rational(slice.fetch(0, 0), slice.fetch(1, 1))
+    addends = PrimeSequence.new(n).each_slice(2).map do |numerator, denominator|
+      Rational(numerator, denominator || 1)
     end
-    rational_numbers.reduce(0, :+)
+    addends.reduce(0, :+)
   end
 
   def worthless(n)
