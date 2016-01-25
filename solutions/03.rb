@@ -71,8 +71,7 @@ module DrunkenMathematician
   module_function
 
   def meaningless(n)
-    first_n_rational_numbers = RationalSequence.new(n)
-    primeish, non_primeish = first_n_rational_numbers.partition do |number|
+    primeish, non_primeish = RationalSequence.new(n).partition do |number|
       number.numerator.prime? || number.denominator.prime?
     end
     primeish.reduce(1, :*) / non_primeish.reduce(1, :*)
