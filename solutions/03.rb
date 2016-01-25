@@ -72,11 +72,10 @@ module DrunkenMathematician
 
   def meaningless(n)
     first_n_rational_numbers = RationalSequence.new(n)
-    two_groups = first_n_rational_numbers.partition do |number|
+    primeish, non_primeish = first_n_rational_numbers.partition do |number|
       number.numerator.prime? || number.denominator.prime?
     end
-    two_groups_reduced = two_groups.flat_map { |group| group.reduce(1, :*) }
-    two_groups_reduced[0] / two_groups_reduced[1]
+    primeish.reduce(1, :*) / non_primeish.reduce(1, :*)
   end
 
   def aimless(n)
