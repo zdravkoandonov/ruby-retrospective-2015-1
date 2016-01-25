@@ -55,14 +55,19 @@ class FibonacciSequence
     @second = second
   end
 
-  def each
+  def each(&block)
+    enum_for(:all_numbers).lazy.take(@count).each(&block)
+  end
+
+  private
+
+  def all_numbers
     current = @first
     following = @second
-    yielded_numbers_count = 0
-    while yielded_numbers_count < @count
+
+    loop do
       yield current
       current, following = following, current + following
-      yielded_numbers_count += 1
     end
   end
 end
