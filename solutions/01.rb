@@ -1,10 +1,12 @@
+EXCHANGE_RATES = {
+  bgn: 1,
+  usd: 1.7408,
+  eur: 1.9557,
+  gbp: 2.6415,
+}
+
 def convert_to_bgn(price, currency)
-  case currency
-    when :bgn then price.round(2)
-    when :usd then (price * 1.7408).round(2)
-    when :eur then (price * 1.9557).round(2)
-    when :gbp then (price * 2.6415).round(2)
-  end
+  (price * EXCHANGE_RATES[currency]).round(2)
 end
 
 def compare_prices(first_price, first_currency, second_price, second_currency)
