@@ -41,16 +41,8 @@ class PrimeSequence
     @count = count
   end
 
-  def each
-    yielded_numbers_count = 0
-    number = 2
-    while yielded_numbers_count < @count
-      if number.prime?
-        yield number
-        yielded_numbers_count += 1
-      end
-      number += 1
-    end
+  def each(&block)
+    1.upto(Float::INFINITY).lazy.select(&:prime?).take(@count).each(&block)
   end
 end
 
