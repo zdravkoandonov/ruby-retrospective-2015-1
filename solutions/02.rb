@@ -21,7 +21,7 @@ end
 
 def obstacle_ahead?(snake, direction, dimensions, moves = 1)
   position = position_ahead_of_snake(snake, direction, moves)
-  !in_bounds?(position, dimensions) || snake?(position, snake)
+  (not in_bounds?(position, dimensions)) || snake?(position, snake)
 end
 
 def danger?(snake, direction, dimensions)
