@@ -1,13 +1,7 @@
 class Integer
   def prime?
     return false if self == 1
-    divisor = 2
-    square_root_of_number = Math.sqrt(self)
-    while divisor <= square_root_of_number
-      return false if self % divisor == 0
-      divisor += 1
-    end
-    true
+    2.upto(self**0.5).all? { |divisor| self % divisor != 0}
   end
 end
 
