@@ -85,7 +85,7 @@ module DrunkenMathematician
   end
 
   def worthless(n)
-    limit = FibonacciSequence.new(n).to_a.fetch(-1, 0)
+    limit = FibonacciSequence.new(n).to_a.last || 0
 
     sum = 0
     RationalSequence.new(limit**2).take_while do |number|
