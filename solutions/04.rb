@@ -1,17 +1,6 @@
-class Card
-  attr_reader :rank, :suit
-
-  def initialize(rank, suit)
-    @rank = rank
-    @suit = suit
-  end
-
-  def ==(other)
-    @rank == other.rank && @suit == other.suit
-  end
-
+class Card < Struct.new(:rank, :suit)
   def to_s
-    "#{@rank.to_s.capitalize} of #{@suit.to_s.capitalize}"
+    "#{rank.to_s.capitalize} of #{suit.to_s.capitalize}"
   end
 end
 
