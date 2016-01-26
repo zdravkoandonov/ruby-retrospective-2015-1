@@ -3,7 +3,7 @@ def position_ahead_of_snake(snake, direction, moves = 1)
 end
 
 def grow(snake, direction)
-  snake.dup.push(position_ahead_of_snake(snake, direction))
+  snake + [position_ahead_of_snake(snake, direction)]
 end
 
 def move(snake, direction)
