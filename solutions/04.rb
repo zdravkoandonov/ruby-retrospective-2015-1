@@ -87,6 +87,8 @@ class WarDeck < Deck
   end
 
   class WarHand < Hand
+    INITIAL_SIZE = 26
+
     def initialize(cards)
       super
     end
@@ -101,7 +103,7 @@ class WarDeck < Deck
   end
 
   def deal
-    WarHand.new(@cards.shift(26))
+    WarHand.new(@cards.shift(WarHand::INITIAL_SIZE))
   end
 end
 
@@ -115,6 +117,8 @@ class BeloteDeck < Deck
   end
 
   class BeloteHand < Hand
+    INITIAL_SIZE = 8
+
     def highest_of_suit(suit)
       BeloteDeck.new(@cards.select { |card| card.suit == suit }).sort.first
     end
@@ -125,45 +129,55 @@ class BeloteDeck < Deck
         any? { |_, same_suit_cards| same_suit_cards.size == 2 }
     end
 
-    def contains_consecutive?(cards, consecutive_count)
-      ranks = BeloteDeck.new.ranks
-      cards.each_cons(consecutive_count).any? do |consecutive_cards|
-        cards_ranks = consecutive_cards.collect { |card| card.rank }
-        rank_index = ranks.index(cards_ranks.first)
-        ranks[rank_index...(rank_index + consecutive_count)] == cards_ranks
-      end
-    end
-
     def tierce?
-      BeloteDeck.new(@cards).sort.to_a.group_by { |card| card.suit }.
-        any? { |_, same_suit_cards| contains_consecutive?(same_suit_cards, 3) }
+      contain_consecutive?(@cards, 3)
     end
 
     def quarte?
-      BeloteDeck.new(@cards).sort.to_a.group_by { |card| card.suit }.
-        any? { |_, same_suit_cards| contains_consecutive?(same_suit_cards, 4) }
+      contain_consecutive?(@cards, 4)
     end
 
     def quint?
-      BeloteDeck.new(@cards).sort.to_a.group_by { |card| card.suit }.
-        any? { |_, same_suit_cards| contains_consecutive?(same_suit_cards, 4) }
+      contain_consecutive?(@cards, 5)
     end
 
     def carre_of_jacks?
-      @cards.select { |card| card.rank == :jack }.size == 4
+      carre?(:jack)
     end
 
     def carre_of_nines?
-      @cards.select { |card| card.rank == 9 }.size == 4
+      carre?(9)
     end
 
     def carre_of_aces?
-      @cards.select { |card| card.rank == :ace }.size == 4
+      carre?(:ace)
+    end
+
+    private
+
+    def carre?(card_rank)
+      @cards.select { |card| card.rank == card_rank }.size == 4
+    end
+
+    def contain_consecutive?(cards, count)
+      BeloteDeck.new(@cards).sort.to_a.group_by { |card| card.suit }.
+        any? do |_, same_suit_cards|
+          contain_consecutive_among_same_suit?(same_suit_cards, count)
+        end
+    end
+
+    def contain_consecutive_among_same_suit?(ordered_same_suit_cards, count)
+      ranks = BeloteDeck.new.ranks
+      ordered_same_suit_cards.each_cons(count).any? do |consecutive_cards|
+        cards_ranks = consecutive_cards.collect { |card| card.rank }
+        rank_index = ranks.index(cards_ranks.first)
+        ranks[rank_index...(rank_index + count)] == cards_ranks
+      end
     end
   end
 
   def deal
-    BeloteHand.new(@cards.shift(8))
+    BeloteHand.new(@cards.shift(BeloteHand::INITIAL_SIZE))
   end
 end
 
@@ -177,20 +191,26 @@ class SixtySixDeck < Deck
   end
 
   class SixtySixHand < Hand
+    INITIAL_SIZE = 6
+
     def twenty?(trump_suit)
-      @cards.select { |card| card.suit != trump_suit }.
-        select { |card| card.rank == :king || card.rank == :queen }.
-        group_by { |card| card.suit }.
-        any? { |_, cards_of_same_suit| cards_of_same_suit.size == 2 }
+      pair_of_queen_and_king?(@cards.select { |card| card.suit != trump_suit })
     end
 
     def forty?(trump_suit)
-      @cards.select { |card| card.suit == trump_suit }.
-        select { |card| card.rank == :king || card.rank == :queen }.size == 2
+      pair_of_queen_and_king?(@cards.select { |card| card.suit == trump_suit })
+    end
+
+    private
+
+    def pair_of_queen_and_king?(cards)
+      cards.select { |card| card.rank == :king || card.rank == :queen }.
+        group_by { |card| card.suit }.
+        any? { |_, same_suit_cards| same_suit_cards.size == 2 }
     end
   end
 
   def deal
-    SixtySixHand.new(@cards.shift(6))
+    SixtySixHand.new(@cards.shift(SixtySixHand::INITIAL_SIZE))
   end
 end
