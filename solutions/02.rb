@@ -1,13 +1,20 @@
-def position_ahead_of_snake(snake, direction, moves = 1)
-  [snake[-1][0] + moves * direction[0], snake[-1][1] + moves * direction[1]]
+def snake_head(snake)
+  snake.last
+end
+
+def position_ahead_of_snake(head, direction, moves = 1)
+  head_x, head_y = head
+  direction_x, direction_y = direction
+
+  [head_x + moves * direction_x, head_y + moves * direction_y]
 end
 
 def grow(snake, direction)
-  snake + [position_ahead_of_snake(snake, direction)]
+  snake + [position_ahead_of_snake(snake_head(snake), direction)]
 end
 
 def move(snake, direction)
-  snake[1..-1].push(position_ahead_of_snake(snake, direction))
+  snake[1..-1].push(position_ahead_of_snake(snake_head(snake), direction))
 end
 
 def snake?(position, snake)
@@ -20,7 +27,7 @@ def in_bounds?(position, dimensions)
 end
 
 def obstacle_ahead?(snake, direction, dimensions, moves = 1)
-  position = position_ahead_of_snake(snake, direction, moves)
+  position = position_ahead_of_snake(snake_head(snake), direction, moves)
   (not in_bounds?(position, dimensions)) || snake?(position, snake)
 end
 
