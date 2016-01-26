@@ -67,6 +67,14 @@ class Deck
     def size
       @cards.size
     end
+
+    private
+
+    def pair_of_queen_and_king?(cards)
+      cards.select { |card| card.rank == :king || card.rank == :queen }.
+        group_by { |card| card.suit }.
+        any? { |_, same_suit_cards| same_suit_cards.size == 2 }
+    end
   end
 end
 
@@ -113,9 +121,7 @@ class BeloteDeck < Deck
     end
 
     def belote?
-      @cards.select { |card| card.rank == :king || card.rank == :queen }.
-        group_by { |card| card.suit }.
-        any? { |_, same_suit_cards| same_suit_cards.size == 2 }
+      pair_of_queen_and_king?(@cards)
     end
 
     def tierce?
@@ -188,14 +194,6 @@ class SixtySixDeck < Deck
 
     def forty?(trump_suit)
       pair_of_queen_and_king?(@cards.select { |card| card.suit == trump_suit })
-    end
-
-    private
-
-    def pair_of_queen_and_king?(cards)
-      cards.select { |card| card.rank == :king || card.rank == :queen }.
-        group_by { |card| card.suit }.
-        any? { |_, same_suit_cards| same_suit_cards.size == 2 }
     end
   end
 
